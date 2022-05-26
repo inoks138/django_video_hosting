@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models import Avg
+
+from config.settings import AUTH_USER_MODEL
+from movies.validators import validate_video_file
 
 
 class Genre(models.Model):
@@ -96,10 +100,13 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
+    def count_rating(self):
+        return self.rates.aggregate(Avg('rate'))
+
 
 class MovieImages(models.Model):
     movie = models.ForeignKey('Movie', on_delete=models.CASCADE, verbose_name="Кино")
-    image = models.ImageField(upload_to='movie_images', verbose_name="Изображение")
+    image = models.ImageField(upload_to='movie_images/%Y/%m/%d', verbose_name="Изображение")
 
     class Meta:
         verbose_name = 'Фотография из фильма'
@@ -111,7 +118,8 @@ class MovieImages(models.Model):
 
 class Trailers(models.Model):
     movie = models.ForeignKey('Movie', on_delete=models.CASCADE, verbose_name="Кино")
-    video = models.FileField(upload_to='movie_trailers/%Y/%m/%d', verbose_name="Видео")
+    video = models.FileField(upload_to='movie_trailers/%Y/%m/%d', verbose_name="Видео",
+                             validators=[validate_video_file])
 
     class Meta:
         verbose_name = 'Трейлер'
@@ -122,7 +130,7 @@ class Trailers(models.Model):
 
 
 class Film(Movie):
-    video = models.FileField(upload_to='films/%Y/%m/%d', verbose_name="Видео")
+    video = models.FileField(upload_to='films/%Y/%m/%d', verbose_name="Видео", validators=[validate_video_file])
 
     class Meta:
         verbose_name = 'Фильм'
@@ -157,7 +165,7 @@ class Season(models.Model):
 
 class Episode(models.Model):
     season = models.ForeignKey('Season', on_delete=models.CASCADE, related_name='episodes', verbose_name="Сезон")
-    video = models.FileField(upload_to='series/%Y/%m/%d', verbose_name="Видео")
+    video = models.FileField(upload_to='series/%Y/%m/%d', verbose_name="Видео", validators=[validate_video_file])
     title = models.CharField(max_length=75, null=True, blank=True, verbose_name="Название")
     number = models.IntegerField(verbose_name="Номер")
 
@@ -168,3 +176,41 @@ class Episode(models.Model):
 
     def __str__(self):
         return f"Серия {self.number} - {self.title}" if self.title else f"Серия {self.number}"
+
+
+class MovieRate(models.Model):
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    SIX = 6
+    SEVEN = 7
+    EIGHT = 8
+    NINE = 9
+    TEN = 10
+
+    MOVIE_RATES = (
+        (ONE, 1),
+        (TWO, 2),
+        (THREE, 3),
+        (FOUR, 4),
+        (FIVE, 5),
+        (SIX, 6),
+        (SEVEN, 7),
+        (EIGHT, 8),
+        (NINE, 9),
+        (TEN, 10),
+    )
+
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE, related_name='rates', verbose_name="Кино")
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rates', verbose_name="Пользователь")
+    rate = models.IntegerField(choices=MOVIE_RATES, verbose_name="Оценка")
+
+    class Meta:
+        verbose_name = 'Оценка'
+        verbose_name_plural = 'Оценки'
+        ordering = ['movie']
+
+    def __str__(self):
+        return f"Оценка {self.user.username} - {self.rate}: {self.movie.title}"

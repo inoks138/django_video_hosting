@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from movies.models import Genre, AgeLimit, Person, PersonRole, MovieImages, Trailers, Film, Series, Season, Episode
+from movies.models import Genre, AgeLimit, Person, PersonRole, MovieImages, Trailers, Film, Series, Season, Episode, \
+    MovieRate
 
 
 class GenreAdmin(admin.ModelAdmin):
@@ -49,7 +50,7 @@ class TrailersImagesInline(admin.TabularInline):
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'get_genres', 'type', 'age_limit', 'release_date', 'thumbnail')
     list_display_links = ('id', 'title')
-    list_filter = ('type', 'genres')
+    list_filter = ('genres', 'age_limit')
     readonly_fields = ('thumbnail', )
     prepopulated_fields = {"url": ("title", )}
     inlines = [MovieImagesInline, TrailersImagesInline]
@@ -87,6 +88,23 @@ class SeasonAdmin(admin.ModelAdmin):
     series_ref.short_description = 'Сериал'
 
 
+class MovieRateAdmin(admin.ModelAdmin):
+    list_display = ('id', 'movie_ref', 'username', 'rate')
+    list_display_links = ('id', )
+    search_fields = ('user__username', 'movie__title')
+
+    def username(self, obj):
+        link = reverse("admin:users_user_change", args=[obj.user.id])
+        return mark_safe(f'<a href="{link}">{obj.user.username}</a>')
+
+    def movie_ref(self, obj):
+        link = reverse(f"admin:movies_{obj.movie.type}_change", args=[obj.movie.id])
+        return mark_safe(f'<a href="{link}">{obj.movie.title}</a>')
+
+    username.short_description = 'Пользователь'
+    movie_ref.short_description = 'Кино'
+
+
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(AgeLimit, AgeLimitAdmin)
 admin.site.register(Person, PersonAdmin)
@@ -94,3 +112,4 @@ admin.site.register(PersonRole, PersonRoleAdmin)
 admin.site.register(Film, MovieAdmin)
 admin.site.register(Series, MovieAdmin)
 admin.site.register(Season, SeasonAdmin)
+admin.site.register(MovieRate, MovieRateAdmin)
