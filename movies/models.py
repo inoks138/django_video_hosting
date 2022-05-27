@@ -1,13 +1,23 @@
 from django.db import models
 from django.db.models import Avg
+from django.urls import reverse
 
 from config.settings import AUTH_USER_MODEL
 from movies.validators import validate_video_file
 
 
 class Genre(models.Model):
+    FILM = 'film'
+    ANIMATION = 'animation'
+    ALL = 'all'
+    GENRE_TYPES = (
+        (FILM, 'film'),
+        (ANIMATION, 'animation'),
+        (ALL, 'all'),
+    )
     title = models.CharField(max_length=50, unique=True, verbose_name="Название")
     slug = models.SlugField(max_length=50, unique=True)
+    type = models.CharField(max_length=10, choices=GENRE_TYPES, default=ALL)
 
     class Meta:
         verbose_name = 'Жанр'
@@ -73,6 +83,7 @@ class Movie(models.Model):
                                   verbose_name="Возрастное ограничение")
     release_date = models.DateField(verbose_name="Дата выпуска")
     poster = models.ImageField(upload_to='movie_posters/%Y/%m/%d', verbose_name="Постер")
+    is_animation = models.BooleanField(default=False, verbose_name='Мультфильм')
 
     country = models.CharField(max_length=30, null=True, blank=True, verbose_name="Страна")
     writer = models.ForeignKey('Person', on_delete=models.SET_NULL, null=True, blank=True,
@@ -99,6 +110,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('watch', kwargs={'url': self.url})
 
     def count_rating(self):
         return self.rates.aggregate(Avg('rate'))
