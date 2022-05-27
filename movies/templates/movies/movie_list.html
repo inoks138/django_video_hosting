@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} :: {{ block.super }}{% endblock %}
+
+{% block additional_links %}
+<link rel="stylesheet" href="{% static 'css/movies_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="catalog__header">
+    <div class="breadcrumbs">
+        <div class="breadcrumbs-it"><a href="{% url 'home' %}">Главная</a></div>
+        <div class="breadcrumbs-it"><a href="{{ url }}">{{ title }}</a></div>
+    </div>
+
+    <div class="catalog__title">{{ title }}</div>
+    <div class="catalog__info">Жанры, страны и года</div>
+    <div class="catalog__sort">
+        <img src="{% static 'img/sort.png' %}" alt="sort">
+        <span>Сортировать по</span>
+        <img src="{% static 'img/arrow-up.svg' %}" alt="sort-arrow" class="sort-arrow">
+    </div>
+
+    <div class="catalog__filters">
+        <div class="filter__plank__list">
+            <div class="filter__plank__it">
+                <span>Жанры</span>
+                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-genre-up">
+            </div>
+            <div class="filter__plank__it">
+                <span>Страны</span>
+                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-countries-up">
+            </div>
+            <div class="filter__plank__it">
+                <span>Годы</span>
+                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-years-up">
+            </div>
+            <div class="filter__plank__it">
+                <span>Рейтинг</span>
+                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-rating-up">
+            </div>
+        </div>
+        <div class="filter__sausage__list">
+            <div class="filter__sausage__it">
+                <img src="{% static 'img/plus.png' %}" alt="plus-free">
+                <span>Бесплатные</span>
+            </div>
+        </div>
+        <div class="filter__buttons">
+            <div class="btn-reset-filters">
+                <img src="{% static 'img/plus.png' %}" alt="reset-filters">
+                <span>Сбросить фильтры</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="catalog__content">
+    <div class="catalog__greed">
+        {% for movie in movies %}
+        <div class="catalog__it" id="{{ movie.url }}">
+            <a href="{{ movie.get_absolute_url }}">
+                <div class="catalog__it__image">
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.url }}">
+                    <div class="catalog__it__age">{{ movie.age_limit.required_age }}+</div>
+                    <div class="catalog__it__properties"></div>
+                </div>
+                <div class="catalog__it__text">
+                    <div class="catalog__it__title">{{ movie.title|truncatechars:20 }}</div>
+                    <div class="catalog__it__badge
+                        {% if movie.require_subscription %}
+                        subscription
+                        {% elif movie.require_purchase %}
+                        purchase
+                        {% else %}
+                        free
+                        {% endif %}">
+                        {% if item.require_subscription %}
+                        Подписка
+                        {% elif item.require_purchase %}
+                        Покупка
+                        {% else %}
+                        Бесплатно
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

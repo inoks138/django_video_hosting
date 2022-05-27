@@ -1,0 +1,23 @@
+{% load static %}
+<div class="header">
+    <div class="navbar">
+        <div class="nav-item-home"><a href="{% url 'home' %}"><img src="{% static 'img/home-icon.jpg' %}" alt="home-icon"></a></div>
+        <div class="nav-item"><a href="{% url 'films' %}">Фильмы</a></div>
+        <div class="nav-item"><a href="{% url 'series' %}">Сериалы</a></div>
+        <div class="nav-item"><a href="{% url 'animation' %}">Мультфильмы</a></div>
+
+        <div class="nav-search-panel">
+            <form action="#" method="get">
+                <input type="text" name="search" placeholder="Поиск...">
+                <button type="submit">
+                    <div>
+                        <img src="{% static 'img/search.png' %}" alt="search">
+                    </div>
+                </button>
+            </form>
+
+        </div>
+        <div class="nav-notification"><img src="{% static 'img/notification-icon.png' %}" alt="notification"></div>
+        <div class="nav-profile"><img src="{% static 'img/profile.png' %}" alt="profile"></div>
+    </div>
+</div>
