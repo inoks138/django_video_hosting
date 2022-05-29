@@ -162,6 +162,9 @@ class Series(Movie):
     def __str__(self):
         return f"{self.title}"
 
+    def get_episode(self, season_number=1, episode_number=1):
+        return self.seasons.filter(number=season_number).first().episodes.filter(number=episode_number).first()
+
 
 class Season(models.Model):
     series = models.ForeignKey('Series', on_delete=models.CASCADE, related_name='seasons', verbose_name="Сериал")
@@ -175,6 +178,12 @@ class Season(models.Model):
 
     def __str__(self):
         return f"Сезон {self.number} - {self.title}" if self.title else f"Сезон {self.number}"
+
+    def get_absolute_url(self):
+        return reverse('watch', kwargs={
+            'url': self.series.url,
+            'season_number': self.number,
+        })
 
 
 class Episode(models.Model):
@@ -190,6 +199,13 @@ class Episode(models.Model):
 
     def __str__(self):
         return f"Серия {self.number} - {self.title}" if self.title else f"Серия {self.number}"
+
+    def get_absolute_url(self):
+        return reverse('watch', kwargs={
+            'url': self.season.series.url,
+            'season_number': self.season.number,
+            'episode_number': self.number
+        })
 
 
 class MovieRate(models.Model):

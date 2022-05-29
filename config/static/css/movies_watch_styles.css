@@ -1,0 +1,114 @@
+.movie__header{
+    margin-bottom: 25px;
+}
+.movie__caption{
+    display: flex;
+    flex-flow: row nowrap;
+    padding-top: 10px;
+    margin-bottom: 20px;
+}
+.movie__poster{
+    width: 420px;
+}
+.movie__poster img{
+    border-radius: 7.5px;
+}
+.movie__info{
+    width: 400px;
+    margin: 0px 75px;
+    padding-top: 35px;
+}
+.movie__title{
+    font-size: 42px;
+    line-height: 44px;
+    font-weight: 700;
+    text-align: center;
+}
+.movie__params{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    margin-top: 12.5px;
+    color: rgba(255,255,255,.8);
+}
+.movie__data, .movie__genres{
+    display: inline-flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-top: 5px;
+}
+.movie__age{
+    padding: 0px 3.5px;
+    margin-left: 7.5px;
+    border: 2px solid rgba(255,255,255,.8);
+}
+.movie__genres__it+.movie__genres__it::before{
+    content: '·';
+    margin: 0px 4.5px;
+}
+.movie__description{
+    margin-top: 40px;
+}
+.movie__description__caption{
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: 700;
+}
+.movie__description__content{
+    margin-top: 10px;
+    color: rgba(255,255,255,.72);
+}
+.movie__info__additional{
+    margin-top: 50px;
+    color: rgba(255,255,255,.72);
+}
+
+.movie__video{
+    margin-top: 40px;
+}
+.movie__video__caption{
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: 500;
+    margin-bottom: 12.5px;
+}
+
+.movie__controls{
+    display: inline-flex;
+    margin-bottom: 12.5px;
+}
+.movie__episode{
+    margin-left: 10px;
+}
+.dropdown{
+    width: 102px;
+    position: relative;
+}
+.dropdown__head {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width: inherit;
+    padding: 8px 18px;
+    background-color: #312b45;
+
+    cursor: pointer;
+}
+.dropdown__head:hover, .dropdown__body__it:hover, .dropdown__head.active, .dropdown__body__it.active{
+    background-color: #7e798f;
+}
+.dropdown__body{
+    display: none;
+    position: absolute;
+    width: 102px;
+    top: 100%;
+    z-index: 1;
+    border-top: 1px solid rgba(255,255,255,.48);
+}
+.dropdown__show .dropdown__body{
+    display: block;
+}
+.dropdown__body__it{
+    padding: 8px 18px;
+    background-color: #312b45;
+}

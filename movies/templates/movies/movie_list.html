@@ -5,6 +5,7 @@
 
 {% block additional_links %}
 <link rel="stylesheet" href="{% static 'css/movies_styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/movies_movie_list_styles.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,7 +14,6 @@
         <div class="breadcrumbs-it"><a href="{% url 'home' %}">Главная</a></div>
         <div class="breadcrumbs-it"><a href="{{ url }}">{{ title }}</a></div>
     </div>
-
     <div class="catalog__title">{{ title }}</div>
     <div class="catalog__info">Жанры, страны и года</div>
     <div class="catalog__sort">

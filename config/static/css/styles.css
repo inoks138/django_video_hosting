@@ -76,6 +76,7 @@ a:hover{
 
 .content-wrap{
     min-height: 593px;
+    padding: 25px 0px;
 }
 .content{
     color: #fff;

@@ -1,7 +1,140 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ movie.title }} :: {{ block.super }}{% endblock %}
 
+{% block additional_links %}
+<link rel="stylesheet" href="{% static 'css/movies_styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/movies_watch_styles.css'%}">
+<script src="{% static 'js/movies_watch_scripts.js'%}"></script>
+{% endblock %}
+
 {% block content %}
-Смотрю
+
+<div class="movie__header">
+    <div class="breadcrumbs">
+        <div class="breadcrumbs-it"><a href="{% url 'home' %}">Главная</a></div>
+        {% if movie.is_animation %}
+        <div class="breadcrumbs-it"><a href="{% url 'animation' %}">Мультфильмы</a></div>
+        {% else %}
+        {% if movie.type == movie.FILM %}
+        <div class="breadcrumbs-it"><a href="{% url 'films' %}">Фильмы</a></div>
+        {% else %}
+        <div class="breadcrumbs-it"><a href="{% url 'series' %}">Сериалы</a></div>
+        {% endif %}
+        {% endif %}
+        <div class="breadcrumbs-it">{{ movie.title }}</div>
+    </div>
+
+    <div class="movie__caption">
+        <div class="movie__poster">
+            <img src="{{ movie.poster.url }}" alt="{{ movie.url }}">
+        </div>
+        <div class="movie__info">
+            <div class="movie__title">{{ movie.title }}</div>
+            <div class="movie__params">
+                <div class="movie__data">
+                    <div class="movie__year">{{ movie.release_date.year }}</div>
+                    <div class="movie__age">{{ movie.age_limit.required_age }}+</div>
+                </div>
+                <div class="movie__genres">
+                    {% if movie.country %}
+                    <div class="movie__genres__it">{{ movie.country }}</div>
+                    {% endif %}
+                    {% for genre in movie.genres.all %}
+                    <div class="movie__genres__it">{{ genre.title }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="movie__description">
+                <div class="movie__description__caption">
+                    {% if movie.is_animation %}
+                    О мультфильме
+                    {% else %}
+                    {% if movie.type == movie.FILM %}
+                    О фильме
+                    {% else %}
+                    О сериале
+                    {% endif %}
+                    {% endif %}
+                </div>
+                <div class="movie__description__content">{{ movie.description }}</div>
+                {% if movie.writer or movie.director or movie.budget %}
+                <div class="movie__info__additional">
+                    {% if movie.writer %}
+                    <div class="movie__writer">Сценарист: {{ movie.writer }}</div>
+                    {% endif %}
+                    {% if movie.director %}
+                    <div class="movie__director">Режиссер: {{ movie.director }}</div>
+                    {% endif %}
+                    {% if movie.budget %}
+                    <div class="movie__budget">Бюджет: {{ movie.budget }}$</div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="movie__video">
+    <div class="movie__video__caption">
+        Смотрите {{ movie.title }}
+        {% if movie.type == movie.SERIES %}{{ season_number }} cезон {{ episode_number }} cерия {% endif %}
+        онлайн
+    </div>
+    {% if movie.type == movie.SERIES %}
+    <div class="movie__controls">
+        <div class="movie__season dropdown">
+            <div class="dropdown__head">Сезон {{ season_number }}</div>
+            <div class="dropdown__body">
+                {% for item in seasons %}
+                <a href="{{ item.get_absolute_url }}">
+                    <div class="dropdown__body__it{% if item.number == season_number %} active{% endif %}">Сезон {{ item.number }}</div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="movie__episode dropdown">
+            <div class="dropdown__head">Серия {{ episode_number }}</div>
+            <div class="dropdown__body">
+                {% for item in episodes %}
+                <a href="{{ item.get_absolute_url }}">
+                    <div class="dropdown__body__it {% if item.number == episode_number %} active{% endif %}">Серия {{ item.number }}</div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="movie__video__content">
+        <video
+                id="my-video"
+                class="video-js"
+                controls
+                preload="auto"
+                width="720"
+                height="404"
+                data-setup="{}"
+        >
+            {% if movie.type == 'film' %}
+            <source src="{% url 'stream' movie.url %}" type="video/mp4"/>
+            <source src="{% url 'stream' movie.url %}" type="video/webm"/>
+            {% else %}
+            {% if episode_number %}
+            <source src="{% url 'stream' movie.url season_number episode_number %}" type="video/mp4"/>
+            <source src="{% url 'stream' movie.url season_number episode_number %}" type="video/webm"/>
+            {% elif season_number and not episode_number %}
+            <source src="{% url 'stream' movie.url season_number %}" type="video/mp4"/>
+            <source src="{% url 'stream' movie.url season_number %}" type="video/webm"/>
+            {% else %}
+            <source src="{% url 'stream' movie.url %}" type="video/mp4"/>
+            <source src="{% url 'stream' movie.url %}" type="video/webm"/>
+            {% endif %}
+            {% endif %}
+        </video>
+    </div>
+</div>
+
+
 {% endblock %}
