@@ -1,9 +1,13 @@
+import re
+from collections import namedtuple
+
+from django.db.models import F
 from django.http import StreamingHttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView
 
-from movies.models import Movie, Film, Series
+from movies.models import Movie, Film, Series, Genre, Country
 from movies.services import open_file
 
 
@@ -15,10 +19,66 @@ class MovieCatalog(ListView):
     template_name = 'movies/movie_list.html'
     context_object_name = 'movies'
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #
-    #     return context
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['countries'] = Country.objects.all()
+        Year = namedtuple('Year', 'title slug')
+        years = [Year(f'{str(i)} год', str(i)) for i in range(2022, 2014, -1)]
+        years.append(Year('2010-2015', '2010-2015'))
+        years.append(Year('2005-2010', '2005-2010'))
+        years.append(Year('2000-2005', '2000-2005'))
+        years.append(Year('1995-2000', '1995-2000'))
+        years.append(Year('1990-1995', '1990-1995'))
+        years.append(Year('1985-1990', '1985-1990'))
+        years.append(Year('1980-1985', '1980-1985'))
+        years.append(Year('до 1980 года', 'before-1980'))
+        context['years'] = years
+        context['rates'] = range(9, 5, -1)
+
+        if 'genres' in self.request.GET:
+            genres_list = self.request.GET['genres'].split(',')
+            genres = Genre.objects.only('title').filter(slug__in=genres_list)
+            context['selected_genres'] = ', '.join([genre.title for genre in genres])
+            context['movies'] = context['movies'].filter(genres__in=genres).distinct()
+
+        if 'countries' in self.request.GET:
+            countries_list = self.request.GET['countries'].split(',')
+            countries = Country.objects.only('title').filter(slug__in=countries_list)
+            context['selected_countries'] = ', '.join([country.title for country in countries])
+            context['movies'] = context['movies'].filter(country__in=countries)
+
+        if 'year' in self.request.GET:
+            year = self.request.GET['year']
+
+            if re.match(r'^\d{4}$', year):
+                context['selected_year'] = year
+                context['movies'] = context['movies'].filter(release_date__year=int(year))
+            elif re.match(r'^\d{4}-\d{4}$', year):
+                context['selected_year'] = year
+                year_start, year_end = (int(year) for year in year.split('-'))
+                context['movies'] = context['movies'].filter(release_date__year__range=(year_start, year_end))
+            elif re.match(r'^before-\d{4}$', year):
+                context['selected_year'] = year
+                context['movies'] = context['movies'].filter(release_date__year__lte=int(year))
+
+        if 'rate' in self.request.GET:
+            pass
+
+        if 'subscription' in self.request.GET:
+            if self.request.GET['subscription'] == 'false':
+                context['movies'] = context['movies'].filter(require_subscription=False)
+            elif self.request.GET['subscription'] == 'true':
+                context['movies'] = context['movies'].filter(require_subscription=True)
+
+        if 'sort' in self.request.GET:
+            sort_method = self.request.GET['sort']
+            if sort_method == 'date':
+                context['movies'] = context['movies'].order_by(F('release_date').desc(nulls_last=True))
+            elif sort_method == 'budget':
+                context['movies'] = context['movies'].order_by(F('budget').desc(nulls_last=True))
+
+        return context
 
 
 class FilmCatalog(MovieCatalog):
@@ -30,6 +90,7 @@ class FilmCatalog(MovieCatalog):
 
         context['title'] = 'Фильмы'
         context['url'] = reverse('films')
+        context['genres'] = Genre.objects.filter(type__in=(Genre.FILM, Genre.ALL))
 
         return context
 
@@ -43,6 +104,7 @@ class SeriesCatalog(MovieCatalog):
 
         context['title'] = 'Сериалы'
         context['url'] = reverse('series')
+        context['genres'] = Genre.objects.filter(type__in=(Genre.FILM, Genre.ALL))
 
         return context
 
@@ -56,6 +118,7 @@ class AnimationCatalog(MovieCatalog):
 
         context['title'] = 'Мультфильмы'
         context['url'] = reverse('animation')
+        context['genres'] = Genre.objects.filter(type__in=(Genre.ANIMATION, Genre.ALL))
 
         return context
 

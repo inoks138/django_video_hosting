@@ -6,6 +6,7 @@
 {% block additional_links %}
 <link rel="stylesheet" href="{% static 'css/movies_styles.css' %}">
 <link rel="stylesheet" href="{% static 'css/movies_movie_list_styles.css' %}">
+<script src="{% static 'js/movie_list_scripts.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -15,36 +16,104 @@
         <div class="breadcrumbs-it"><a href="{{ url }}">{{ title }}</a></div>
     </div>
     <div class="catalog__title">{{ title }}</div>
-    <div class="catalog__info">Жанры, страны и года</div>
-    <div class="catalog__sort">
-        <img src="{% static 'img/sort.png' %}" alt="sort">
-        <span>Сортировать по</span>
-        <img src="{% static 'img/arrow-up.svg' %}" alt="sort-arrow" class="sort-arrow">
+    <div class="catalog__info">
+        {% if selected_genres %}{{ selected_genres }}{% else %}Все жанры{% endif %},
+        {% if selected_countries %}{{ selected_countries }}{% else %}Все страны{% endif %},
+        {% if selected_year %}{{ selected_year }}{% else %}Все года{% endif %}
+    </div>
+    <div class="catalog__sort dropdown dropdown__sort">
+        <div class="dropdown__head">
+            <img src="{% static 'img/sort.png' %}" alt="sort" class="sort-ic">
+            <span>Сортировать по</span>
+            <img src="{% static 'img/arrow-up.svg' %}" alt="sort-arrow" class="sort-arrow">
+        </div>
+        <div class="dropdown__body">
+            <div class="dropdown__body__caption">Сортировать</div>
+            <div class="dropdown__body__it sort" id="sort_popular">По популярности</div>
+            <div class="dropdown__body__it sort" id="sort_date">Дате выпуска</div>
+            <div class="dropdown__body__it sort" id="sort_budget">Бюджетам</div>
+        </div>
     </div>
 
     <div class="catalog__filters">
         <div class="filter__plank__list">
-            <div class="filter__plank__it">
-                <span>Жанры</span>
-                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-genre-up">
+            <div class="filter__plank__it dropdown dropdown__right">
+                <div class="dropdown__head">
+                    <span>Жанры</span>
+                    <img src="{% static 'img/arrow-up.svg' %}" alt="filter-genre-up">
+                </div>
+                <div class="dropdown__body genres">
+                    <div class="dropdown__body__grid">
+                        {% for genre in genres %}
+                        <div class="dropdown__body__it genre" id="genre-{{ genre.slug }}">
+                            <span>{{ genre.title }}</span>
+                            <img src="{% static 'img/tick.png' %}" alt="tick-{{ genre.slug }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            <div class="filter__plank__it">
-                <span>Страны</span>
-                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-countries-up">
+            <div class="filter__plank__it dropdown dropdown__right">
+                <div class="dropdown__head">
+                    <span>Страны</span>
+                    <img src="{% static 'img/arrow-up.svg' %}" alt="filter-country-up">
+                </div>
+                <div class="dropdown__body countries">
+                    <div class="dropdown__body__grid">
+                        {% for country in countries %}
+                        <div class="dropdown__body__it country" id="country-{{ country.slug }}">
+                            <span>{{ country.title }}</span>
+                            <img src="{% static 'img/tick.png' %}" alt="tick-{{ country.slug }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            <div class="filter__plank__it">
-                <span>Годы</span>
-                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-years-up">
+            <div class="filter__plank__it dropdown dropdown__down">
+                <div class="dropdown__head">
+                    <span>Года</span>
+                    <img src="{% static 'img/arrow-up.svg' %}" alt="filter-year-up">
+                </div>
+                <div class="dropdown__body years">
+                    <div class="dropdown__body__it year down" id="year_all-years">
+                        <span>Все годы</span>
+                        <img src="{% static 'img/dot-inside-a-circle.png' %}" alt="dot-all-years">
+                    </div>
+                    {% for year in years %}
+                    <div class="dropdown__body__it year down" id="year_{{ year.slug }}">
+                        <span>{{ year.title }}</span>
+                        <img src="{% static 'img/dot-inside-a-circle.png' %}" alt="dot-{{ year.slug }}">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="filter__plank__it">
-                <span>Рейтинг</span>
-                <img src="{% static 'img/arrow-up.svg' %}" alt="filter-rating-up">
+            <div class="filter__plank__it dropdown dropdown__down">
+                <div class="dropdown__head">
+                    <span>Рейтинги</span>
+                    <img src="{% static 'img/arrow-up.svg' %}" alt="filter-rate-up">
+                </div>
+                <div class="dropdown__body rates">
+                    <div class="dropdown__body__it rate down" id="rate_all-rates">
+                        <span>Любой рейтинг</span>
+                        <img src="{% static 'img/dot-inside-a-circle.png' %}" alt="dot-all-rates">
+                    </div>
+                    {% for rate in rates %}
+                    <div class="dropdown__body__it rate down" id="rate_{{ rate }}">
+                        <span>Больше {{ rate }}</span>
+                        <img src="{% static 'img/dot-inside-a-circle.png' %}" alt="dot-{{ rate }}">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
         <div class="filter__sausage__list">
-            <div class="filter__sausage__it">
+            <div class="filter__sausage__it" id="filter__free">
                 <img src="{% static 'img/plus.png' %}" alt="plus-free">
                 <span>Бесплатные</span>
+            </div>
+            <div class="filter__sausage__it" id="filter__subscription">
+                <img src="{% static 'img/plus.png' %}" alt="plus-free">
+                <span>По подписке</span>
             </div>
         </div>
         <div class="filter__buttons">
@@ -75,9 +144,9 @@
                         {% else %}
                         free
                         {% endif %}">
-                        {% if item.require_subscription %}
+                        {% if movie.require_subscription %}
                         Подписка
-                        {% elif item.require_purchase %}
+                        {% elif movie.require_purchase %}
                         Покупка
                         {% else %}
                         Бесплатно
