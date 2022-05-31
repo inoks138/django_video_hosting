@@ -28,6 +28,19 @@ class Genre(models.Model):
         return self.title
 
 
+class Country(models.Model):
+    title = models.CharField(max_length=30, unique=True, verbose_name="Название")
+    slug = models.SlugField(max_length=30, unique=True)
+
+    class Meta:
+        verbose_name = 'Страна'
+        verbose_name_plural = 'Страны'
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
+
 class AgeLimit(models.Model):
     title = models.CharField(max_length=5, unique=True, verbose_name="Название")
     required_age = models.IntegerField(verbose_name="Требуемый возраст")
@@ -85,7 +98,7 @@ class Movie(models.Model):
     poster = models.ImageField(upload_to='movie_posters/%Y/%m/%d', verbose_name="Постер")
     is_animation = models.BooleanField(default=False, verbose_name='Мультфильм')
 
-    country = models.CharField(max_length=30, null=True, blank=True, verbose_name="Страна")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Страна")
     writer = models.ForeignKey('Person', on_delete=models.SET_NULL, null=True, blank=True,
                                related_name='writer_movies', verbose_name="Сценарист")
     director = models.ForeignKey('Person', on_delete=models.SET_NULL, null=True, blank=True,

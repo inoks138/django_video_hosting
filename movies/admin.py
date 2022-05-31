@@ -3,10 +3,17 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from movies.models import Genre, AgeLimit, Person, PersonRole, MovieImages, Trailers, Film, Series, Season, Episode, \
-    MovieRate
+    MovieRate, Country
 
 
 class GenreAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'slug')
+    list_display_links = ('id', 'title')
+    search_fields = ('title',)
+    prepopulated_fields = {"slug": ('title',)}
+
+
+class CountryAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'slug')
     list_display_links = ('id', 'title')
     search_fields = ('title',)
@@ -106,6 +113,7 @@ class MovieRateAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Genre, GenreAdmin)
+admin.site.register(Country, CountryAdmin)
 admin.site.register(AgeLimit, AgeLimitAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonRole, PersonRoleAdmin)
