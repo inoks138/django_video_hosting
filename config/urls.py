@@ -20,7 +20,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('movies.urls'))
+    path('profile/', include('users.urls')),
+    path('', include('movies.urls')),
+    path('', include('social_django.urls', namespace='social')),
 ]
 
 if settings.DEBUG:

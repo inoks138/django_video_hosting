@@ -85,7 +85,7 @@
     </div>
     {% if movie.type == movie.SERIES %}
     <div class="movie__controls">
-        <div class="movie__season dropdown">
+        <div class="movie__season dropdown dropdown__watch">
             <div class="dropdown__head">Сезон {{ season_number }}</div>
             <div class="dropdown__body">
                 {% for item in seasons %}
@@ -95,7 +95,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="movie__episode dropdown">
+        <div class="movie__episode dropdown dropdown__watch">
             <div class="dropdown__head">Серия {{ episode_number }}</div>
             <div class="dropdown__body">
                 {% for item in episodes %}

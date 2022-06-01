@@ -80,35 +80,23 @@
 .movie__episode{
     margin-left: 10px;
 }
-.dropdown{
+
+.dropdown__watch{
     width: 102px;
-    position: relative;
 }
-.dropdown__head {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
+.dropdown__watch .dropdown__head {
     width: inherit;
     padding: 8px 18px;
     background-color: #312b45;
-
-    cursor: pointer;
 }
-.dropdown__head:hover, .dropdown__body__it:hover, .dropdown__head.active, .dropdown__body__it.active{
+.dropdown__watch .dropdown__head:hover, .dropdown__watch .dropdown__body__it:hover, .dropdown__watch .dropdown__head.active, .dropdown__watch .dropdown__body__it.active{
     background-color: #7e798f;
 }
-.dropdown__body{
-    display: none;
-    position: absolute;
-    width: 102px;
-    top: 100%;
-    z-index: 1;
+.dropdown__watch .dropdown__body{
+    width: inherit;
     border-top: 1px solid rgba(255,255,255,.48);
 }
-.dropdown__show .dropdown__body{
-    display: block;
-}
-.dropdown__body__it{
+.dropdown__watch .dropdown__body__it{
     padding: 8px 18px;
     background-color: #312b45;
 }

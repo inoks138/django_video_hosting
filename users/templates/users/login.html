@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Вход :: {{ block.super }}{% endblock %}
+
+{% block additional_links %}
+<link rel="stylesheet" href="{% static 'css/users_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+    <div class="login">
+        <a class="btn-social" href="{% url 'social:begin' 'google-oauth2' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+                <g fill="none" fill-rule="evenodd">
+                    <path fill="#EE4D3C"
+                          d="M36.226 32.83v6.34s6.233-.011 8.77-.011c-1.373 4.11-3.508 6.346-8.77 6.346-5.323 0-9.477-4.255-9.477-9.504 0-5.25 4.154-9.506 9.477-9.506 2.815 0 4.633.976 6.3 2.337 1.333-1.318 1.223-1.506 4.619-4.669A16.305 16.305 0 0 0 36.226 20C27.265 20 20 27.164 20 36.001 20 44.838 27.265 52 36.226 52c13.392 0 16.667-11.502 15.581-19.17h-15.58z"></path>
+                    <path fill="#4C90F5"
+                          d="M47.313 47.97l-5.481-3.918c1.5-1.072 2.439-2.721 3.165-4.893-2.538 0-8.77.01-8.77.01v-6.338h15.58c.68 4.797-.348 11.096-4.494 15.14z"></path>
+                    <path fill="#3BB15D"
+                          d="M47.483 47.801C45 50.313 41.354 52 36.226 52c-6.339 0-11.828-3.583-14.499-8.808l5.585-3.928a9.408 9.408 0 0 0 8.914 6.241c2.688 0 4.56-.584 5.932-1.703l5.325 4z"></path>
+                    <path fill="#FBC402"
+                          d="M22.022 43.741A15.753 15.753 0 0 1 20 36.001c0-2.802.73-5.436 2.014-7.727l5.526 3.886a9.615 9.615 0 0 0-.791 3.841c0 1.353.276 2.64.777 3.806l-5.504 3.934z"></path>
+                </g>
+            </svg>
+            <span>Войти с помощью Google</span>
+        </a>
+
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+
+            <div class="control-wrap">
+                <label for="id_username">Введите имя пользователя или email:</label>
+                {{ form.username }}
+            </div>
+
+            <div class="control-wrap">
+                <label for="id_password">Введите пароль:</label>
+                {{ form.password }}
+            </div>
+
+            {% if form.errors %}
+            <span class="login-error">Неправильный логин или пароль</span>
+            {% endif %}
+
+            <button type="submit" class="btn-login-submit">Подтвердить</button>
+        </form>
+
+        <a class="ref-register" href="{% url 'register' %}">Регистрация</a>
+    </div>
+</div>
+{% endblock %}

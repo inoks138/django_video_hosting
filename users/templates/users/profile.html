@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль пользователя {{ user_profile }} :: {{ block.super }}{% endblock %}
+
+{% block content %}
+{{ user_profile.username }}
+{% endblock %}

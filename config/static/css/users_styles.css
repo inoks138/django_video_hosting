@@ -1,0 +1,79 @@
+.login-wrap, .register-wrap{
+    display: flex;
+    justify-content: center;
+}
+.login, .register{
+    padding: 30px;
+    background-color: #1f1b2e;
+    border-radius: 15px;
+}
+
+.btn-social{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    width: 350px;
+    border-radius: 5px;
+    background-color: #312b45;
+}
+.btn-social:hover, .btn-login-submit:hover{
+    background-color: #7e798f;
+}
+.btn-social svg{
+    width: 45px;
+    height: 45px;
+}
+.btn-social span{
+    align-self: center;
+}
+
+.login-form{
+    display: flex;
+    flex-flow: column nowrap;
+    width: 350px;
+}
+.control-wrap{
+    margin: 10px 0px;
+}
+.control{
+    width: 350px;
+    border: 1px solid #cccad3;
+    background-color: #cccad3;
+    border-radius: 5px;
+    padding: 10px;
+}
+.control:focus{
+    border: 1px solid #cccad3;
+    background-color: #cccad3;
+    outline: none !important;
+}
+label{
+    color: #a5a1b2;
+}
+.login-error{
+    color: red;
+    margin-top: 10px;
+    padding-left: 20px;
+}
+.register-errors ul{
+    color: red;
+    padding-left: 20px;
+    list-style: none;
+}
+.btn-login-submit{
+    border: none;
+    border-radius: 5px;
+    background-color: #312b45;
+    color: white;
+    margin-top: 10px;
+    padding: 7.5px;
+}
+.ref-register{
+    display: block;
+    width: 350px;
+    margin-top: 10px;
+    text-align: center;
+}
+.ref-register:hover{
+    color: #a5a1b2;
+}

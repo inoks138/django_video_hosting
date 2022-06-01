@@ -18,6 +18,23 @@
 
         </div>
         <div class="nav-notification"><img src="{% static 'img/notification-icon.png' %}" alt="notification"></div>
-        <div class="nav-profile"><img src="{% static 'img/profile.png' %}" alt="profile"></div>
+        <div class="nav-profile dropdown dropdown__profile">
+            <div class="dropdown__head">
+                <img src="{% static 'img/profile.png' %}" alt="profile">
+            </div>
+            <div class="dropdown__body">
+                {% if user.is_authenticated %}
+                <div class="dropdown__body__it"><a href="{% url 'profile' %}">Мой профиль</a></div>
+                <div class="dropdown__body__it"><a href="#">Личные сообщения</a></div>
+                <div class="dropdown__body__it__divider"></div>
+                <a href="{% url 'logout' %}"><div class="dropdown__body__it logout">Выход</div></a>
+                {% else %}
+                <div class="dropdown__authentication">
+                    <a href="{% url 'login' %}"><div class="dropdown__body__it">Вход</div></a>
+                    <a href="{% url 'register' %}"><div class="dropdown__body__it">Регистрация</div></a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
