@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load subscription_tags %}
+
+{% block title %}Вход :: {{ block.super }}{% endblock %}
+
+{% block additional_links %}
+<link rel="stylesheet" href="{% static 'css/buy_subscription_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs">
+    <div class="breadcrumbs-it"><a href="{% url 'home' %}">Главная</a></div>
+    <div class="breadcrumbs-it"><a href="{% url 'subscription_list' %}">Оформление подписки</a></div>
+    <div class="breadcrumbs-it">Оплата</div>
+</div>
+
+<div class="payment__caption">
+    Оплатить подписку
+</div>
+
+<div class="payment__info">
+    <div class="payment__term">Подписка на {% get_months_case months %}</div>
+    <div class="payment__cost">Всего к оплате: {{ cost }}$</div>
+    <form action="{% url 'buy_subscription' months %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <div class="payment__is_paid">
+            <span>Оплачено:</span>{{ form.is_paid }}
+        </div>
+
+        <button type="submit" class="btn-submit">Оплатить</button>
+    </form>
+</div>
+{% endblock %}

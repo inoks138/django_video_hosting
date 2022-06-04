@@ -36,3 +36,10 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'username', 'password1', 'password2',)
+
+
+class BuySubscriptionForm(forms.Form):
+    is_paid = forms.BooleanField()
+
+    class Meta:
+        fields = ('is_paid', )

@@ -59,7 +59,7 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.username
 
-    def check_subscription(self) -> bool:
+    def is_subscribed(self) -> bool:
         """Returns true if user has paid for subscription else false"""
         subscriptions = self.subscriptions.all()
         if not subscriptions:
@@ -109,7 +109,7 @@ class UserSubscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions', verbose_name="Пользователь")
     start_on = models.DateField(verbose_name="Начало")
     end_on = models.DateField(verbose_name="Конец")
-    cost = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Цена")
+    cost = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Стоимость")
     created_at = models.DateTimeField(auto_now=True, verbose_name="Создано")
 
     class Meta:
@@ -121,7 +121,22 @@ class UserSubscription(models.Model):
         return f"Оплата подписки {self.user.username}"
 
     @classmethod
-    def check_cost(cls, months_count) -> float:
+    def get_price(cls, months_count) -> float:
+        """Returns subscription cost for certain count of months"""
+        if months_count <= 0:
+            raise ValueError('Количество месяцев не может быть меньше единицы')
+
+        if months_count < 3:
+            return round(cls.SUBSCRIPTION_COST, 2)
+        elif months_count < 6:
+            return round(cls.SUBSCRIPTION_COST * cls.DEPRECIATION_FOR_THREE_MONTHS, 2)
+        elif months_count < 12:
+            return round(cls.SUBSCRIPTION_COST * cls.DEPRECIATION_FOR_SIX_MONTHS, 2)
+        else:
+            return round(cls.SUBSCRIPTION_COST * cls.DEPRECIATION_FOR_TWELVE_MONTHS, 2)
+
+    @classmethod
+    def get_cost(cls, months_count) -> float:
         """Returns subscription cost for certain count of months"""
         if months_count <= 0:
             raise ValueError('Количество месяцев не может быть меньше единицы')

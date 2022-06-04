@@ -93,6 +93,29 @@ a:hover{
     border-top: 1px solid rgba(255,255,255,.16);
 }
 
+
+
+.breadcrumbs{
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 13.5px;
+    color: rgba(255,255,255,.56);
+    margin-bottom: 15px;
+}
+.breadcrumbs-it a{
+    color: #fff;
+}
+.breadcrumbs-it a:hover{
+    color: #ea003d;
+}
+.breadcrumbs-it+.breadcrumbs-it::before{
+    content: '/';
+    margin-left: 4px;
+    margin-right: 3px;
+}
+
+
+
 .dropdown{
     position: relative;
 }

@@ -25,7 +25,7 @@
             <div class="dropdown__body">
                 {% if user.is_authenticated %}
                 <div class="dropdown__body__it"><a href="{% url 'profile' %}">Мой профиль</a></div>
-                <div class="dropdown__body__it"><a href="#">Личные сообщения</a></div>
+                <div class="dropdown__body__it"><a href="{% url 'subscription_list' %}">Оформить подписку</a></div>
                 <div class="dropdown__body__it__divider"></div>
                 <a href="{% url 'logout' %}"><div class="dropdown__body__it logout">Выход</div></a>
                 {% else %}

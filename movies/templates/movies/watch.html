@@ -4,7 +4,6 @@
 {% block title %}{{ movie.title }} :: {{ block.super }}{% endblock %}
 
 {% block additional_links %}
-<link rel="stylesheet" href="{% static 'css/movies_styles.css' %}">
 <link rel="stylesheet" href="{% static 'css/movies_watch_styles.css'%}">
 <script src="{% static 'js/movies_watch_scripts.js'%}"></script>
 {% endblock %}
@@ -108,6 +107,7 @@
     </div>
     {% endif %}
     <div class="movie__video__content">
+        {% if not movie.require_subscription or user.is_subscribed %}
         <video
                 id="my-video"
                 class="video-js"
@@ -133,6 +133,12 @@
             {% endif %}
             {% endif %}
         </video>
+        {% else %}
+        <div class="video__empty">
+            <div class="buy_subscription_ref"><a href="{% url 'subscription_list' %}?next={{ request.path }}">Оформить подписку</a></div>
+            <div class="login_ref"><a href="{% url 'login' %}?next={{ request.path }}">Войти</a></div>
+        </div>
+        {% endif %}
     </div>
 </div>
 

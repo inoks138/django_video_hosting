@@ -28,7 +28,7 @@
 
         <form method="POST" class="login-form">
             {% csrf_token %}
-
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
             <div class="control-wrap">
                 <label for="id_username">Введите имя пользователя или email:</label>
                 {{ form.username }}
@@ -45,8 +45,11 @@
 
             <button type="submit" class="btn-login-submit">Подтвердить</button>
         </form>
-
+        {% if not request.GET.next %}
         <a class="ref-register" href="{% url 'register' %}">Регистрация</a>
+        {% else %}
+        <a class="ref-register" href="{% url 'register' %}?next={{ request.GET.next }}">Регистрация</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

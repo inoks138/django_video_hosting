@@ -100,3 +100,34 @@
     padding: 8px 18px;
     background-color: #312b45;
 }
+
+.video__empty{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 720px;
+    height: 404px;
+    background-color: rgba(7,5,14,.8);
+}
+.buy_subscription_ref, .login_ref{
+    background-color: #d4142c;
+    border-radius: 8px;
+    justify-self: center;
+}
+.login_ref{
+    margin-top: 10px;
+}
+.login_ref a{
+    display: block;
+    padding: 8px 20px;
+    text-align: center;
+}
+.buy_subscription_ref a{
+    display: block;
+    padding: 12px 36px;
+    text-align: center;
+}
+.buy_subscription_ref:hover, .login_ref:hover{
+    background-color: #ff223d;
+}

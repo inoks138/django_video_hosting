@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Вход :: {{ block.super }}{% endblock %}
+
+{% block additional_links %}
+<link rel="stylesheet" href="{% static 'css/subscription_list_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs">
+    <div class="breadcrumbs-it"><a href="{% url 'home' %}">Главная</a></div>
+    <div class="breadcrumbs-it">Оформление подписки</div>
+</div>
+
+<div class="subscription__caption">
+    Оформить подписку
+</div>
+
+<div class="subscription__list">
+    {% for subscription in subscriptions %}
+    <div class="subscription">
+        <div class="subscription__title">{{ subscription.title }}</div>
+        {% if not subscription.economy %}
+        <div class="subscription__price__wrap standart">
+            <div class="subscription__price">Цена: {{ subscription.price }}$</div>
+        </div>
+        {% else %}
+        <div class="subscription__price__wrap">
+            <div class="subscription__price">Цена: <span class="without__economy">{{ price_for_one_month }}$</span>
+            </div>
+            <div class="subscription__price__economy">{{ subscription.price }}$</div>
+        </div>
+        {% endif %}
+        <div class="subscription__cost">К оплате: {{ subscription.cost }}$</div>
+        {% if not request.GET.next %}
+        <div class="btn-submit"><a href="{% url 'buy_subscription' subscription.term %}">Оформить</a></div>
+        {% else %}
+        <div class="btn-submit"><a href="{% url 'buy_subscription' subscription.term %}?next={{ request.GET.next }}">Оформить</a></div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+.payment__caption{
+    font-size: 32px;
+    line-height: 36px;
+    font-weight: 650;
+    margin-bottom: 20px;
+}
+.payment__info{
+    width: 300px;
+    padding: 14px 20px;
+    border-radius: 7.5px;
+    background-color: #1f1b2e;
+    color: rgba(217,215,224,.85);
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 500;
+}
+.payment__term{
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 550;
+    margin-bottom: 20px;
+}
+.payment__is_paid{
+    margin: 2px 0px 4px 0px;
+}
+.payment__is_paid span{
+    margin-right: 6px;
+}
+.btn-submit{
+    display: block;
+    width: 100%;
+    border-radius: 7.5px;
+    background-color: #312b45;
+
+    padding: 12px 30px;
+    margin-top: 7.5px;
+    border-radius: 7.5px;
+    background-color: #312b45;
+    text-align: center;
+
+    color: #fff;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 500;
+    border: none;
+}
+.btn-submit:hover{
+    background-color: #7e798f;
+}
